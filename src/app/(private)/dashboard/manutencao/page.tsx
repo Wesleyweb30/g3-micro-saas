@@ -178,32 +178,63 @@ export default async function ManutencaoDashboardPage() {
                 <h2 className="text-2xl font-semibold text-gray-700">
                     Histórico de Manutenções Recentes
                 </h2>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full border border-gray-300 rounded-lg">
-                        <thead className="bg-gray-200">
+                <div className="w-full overflow-x-auto bg-white rounded-xl shadow-md border border-gray-200">
+                    <table className="min-w-full text-sm text-gray-700">
+
+                        <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
                             <tr>
-                                <th className="p-4 text-left">OS</th>
-                                <th className="p-4 text-left">Data</th>
-                                <th className="p-4 text-left">Executor</th>
-                                <th className="p-4 text-left">Fim do Serviço</th>
-                                <th className="p-4 text-left">Mídia</th>
-                                <th className="p-4 text-left">Serviços Executados</th>
-                                <th className="p-4 text-left">Observação</th>
+                                <th className="px-6 py-3 text-left">OS</th>
+                                <th className="px-6 py-3 text-left">Data</th>
+                                <th className="px-6 py-3 text-left">Executor</th>
+                                <th className="px-6 py-3 text-left">Fim do Serviço</th>
+                                <th className="px-6 py-3 text-left">Mídia</th>
+                                <th className="px-6 py-3 text-left">Serviços Executados</th>
+                                <th className="px-6 py-3 text-left">Observação</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {manutencaoAtual?.results?.map((item: any) => (
-                                <tr key={item.id} className="hover:bg-gray-100">
-                                    <td className="p-4 border">{item.document_number}</td>
-                                    <td className="p-4 border">{formatDateBR(item.created_at)}</td>
-                                    <td className="p-4 border">{getFieldValue(item.field_values, "EXECUTOR DO SERVIÇO")}</td>
-                                    <td className="p-4 border">{formatDateBR(getFieldValue(item.field_values, "DATA E HORA - FIM DE SERVIÇO"))}</td>
-                                    <td className="p-4 border">{getFieldValue(item.field_values, "MIDIA")}</td>
-                                    <td className="p-4 border">{getFieldValue(item.field_values, "SERVIÇO EXECUTADO")}</td>
-                                    <td className="p-4 border">{getFieldValue(item.field_values, "OBSERVAÇÃO")}</td>
+
+                        <tbody className="divide-y divide-gray-200">
+                            {manutencaoAtual?.results?.map((item: any, index: number) => (
+                                <tr
+                                    key={item.id}
+                                    className={`
+            ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+            hover:bg-blue-50 transition-colors duration-200
+          `}
+                                >
+                                    <td className="px-6 py-4 font-medium text-gray-900">
+                                        {item.document_number}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {formatDateBR(item.created_at)}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {getFieldValue(item.field_values, "EXECUTOR DO SERVIÇO")}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {formatDateBR(
+                                            getFieldValue(item.field_values, "DATA E HORA - FIM DE SERVIÇO")
+                                        )}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {getFieldValue(item.field_values, "MIDIA")}
+                                    </td>
+
+                                    <td className="px-6 py-4 max-w-xs truncate">
+                                        {getFieldValue(item.field_values, "SERVIÇO EXECUTADO")}
+                                    </td>
+
+                                    <td className="px-6 py-4 max-w-xs truncate">
+                                        {getFieldValue(item.field_values, "OBSERVAÇÃO")}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 </div>
             </section>
