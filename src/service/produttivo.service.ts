@@ -1,4 +1,6 @@
 type Params = {
+    page?: number,
+    pageSize?: number,
     startDate?: string
     endDate?: string,
     userId?: number,
@@ -36,8 +38,8 @@ export async function produttivoGet(endpoint: string) {
 
 }
 export async function getProduttivoFormFillsManutencao(params?: Params) {
-    const { startDate, endDate, userId, formId } = params || {};
+    const { page, pageSize, startDate, endDate, userId, formId } = params || {};
     const range = `${startDate} - ${endDate}`;
-    return produttivoGet(`form_fills?order_type=desc&range_time=${encodeURIComponent(range)}&form_fill[form_ids][]=${formId}&form_fill[user_ids][]=${userId ?? ''}&form_fill[is_valid]=true`);
+    return produttivoGet(`form_fills?page=${page || 1}&per_page=${pageSize || 30}&order_type=desc&range_time=${encodeURIComponent(range)}&form_fill[form_ids][]=${formId}&form_fill[user_ids][]=${userId ?? ''}&form_fill[is_valid]=true`);
 }
 

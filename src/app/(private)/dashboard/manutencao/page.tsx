@@ -1,4 +1,5 @@
 import { getProduttivoFormFillsManutencao } from "@/src/service/produttivo.service";
+import Link from "next/link";
 
 /*
 ========================================
@@ -57,7 +58,10 @@ function getMonthRange(date: Date) {
     };
 }
 
-export default async function ManutencaoDashboardPage() {
+export default async function ManutencaoDashboardPage({ searchParams, }: { searchParams: Promise<{ page?: string }> }) {
+
+    const currentPage = await Number((await searchParams).page) || 1;
+    const pageSize = 30;
 
     const now = new Date();
 
@@ -77,12 +81,13 @@ export default async function ManutencaoDashboardPage() {
 
     // Manutenções gerais (todos usuários)
     const manutencaoAtual = await getProduttivoFormFillsManutencao({
+        page: currentPage,
+        pageSize: pageSize,
         startDate: mesAtual.start,
         endDate: mesAtual.end,
         // userId: 310344,
         formId: 356263,
     });
-
 
     const manutencaoAnterior = await getProduttivoFormFillsManutencao({
         startDate: mesAnterior.start,
@@ -234,8 +239,19 @@ export default async function ManutencaoDashboardPage() {
                                 </tr>
                             ))}
                         </tbody>
-
                     </table>
+
+                    {/**Paginaçã */}
+                    <div className="w-full flex items-center justify-center space-x-4 py-4">
+                        <Link href={`?page=${currentPage - 1}`} className={currentPage <= 1 ? 'pointer-events-none' : ''}>
+                            Anterior
+                        </Link>
+                        <span>{currentPage} de {manutencaoAnterior?.meta?.total_pages}</span>
+                        <Link href={`?page=${currentPage + 1}`} className={currentPage >= manutencaoAnterior?.meta?.total_pages ? 'pointer-events-none' : ''}>
+                            Próxima
+                        </Link>
+                    </div>
+
                 </div>
             </section>
         </main>
