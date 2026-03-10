@@ -89,6 +89,19 @@ export default async function ManutencaoDashboardPage({ searchParams, }: { searc
         formId: 356263,
     });
 
+    // const listaManutencaoAtual = manutencaoAtual?.results || [];
+    // console.log(listaManutencaoAtual)
+
+    // listaManutencaoAtual.forEach((item: any) => {
+    //     console.log('Item:', {
+    //         id: item.id,
+    //         document_number: item.document_number,
+    //         created_at: item.created_at,
+    //         field_values: item.field_values.map((f: any) => ({  name: f.name, value: f.value }))
+    //     });
+    // });
+
+
     const manutencaoAnterior = await getProduttivoFormFillsManutencao({
         startDate: mesAnterior.start,
         endDate: mesAnterior.end,
@@ -199,45 +212,59 @@ export default async function ManutencaoDashboardPage({ searchParams, }: { searc
                         </thead>
 
                         <tbody className="divide-y divide-gray-200">
-                            {manutencaoAtual?.results?.map((item: any, index: number) => (
-                                <tr
-                                    key={item.id}
-                                    className={`
-            ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-            hover:bg-blue-50 transition-colors duration-200
-          `}
-                                >
-                                    <td className="px-6 py-4 font-medium text-gray-900">
-                                        {item.document_number}
-                                    </td>
+                            {manutencaoAtual?.results?.map((item: any, index: number) => {
+                                const fimServico = formatDateBR(
+                                    getFieldValue(item.field_values, "DATA E HORA - FIM DE SERVIÇO")
+                                );
 
-                                    <td className="px-6 py-4">
-                                        {formatDateBR(item.created_at)}
-                                    </td>
+                                const isInvalid = fimServico === "Invalid Date";
 
-                                    <td className="px-6 py-4">
-                                        {getFieldValue(item.field_values, "EXECUTOR DO SERVIÇO")}
-                                    </td>
+                                return (
+                                    <tr
+                                        key={item.id}
+                                        className={`
+          ${isInvalid ? " bg-red-500" : index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+          hover:bg-blue-50 transition-colors duration-200
+        `}
+                                    >
+                                        <td className="px-6 py-4 font-medium text-gray-900">
+                                            <Link
+                                                href={`https://app.produttivo.com.br/form_fills/${item.id}`}
+                                                target="_blank"
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                {item.document_number}
+                                            </Link>
+                                        </td>
 
-                                    <td className="px-6 py-4">
-                                        {formatDateBR(
-                                            getFieldValue(item.field_values, "DATA E HORA - FIM DE SERVIÇO")
-                                        )}
-                                    </td>
+                                        <td className="px-6 py-4">
+                                            {formatDateBR(item.created_at)}
+                                        </td>
 
-                                    <td className="px-6 py-4">
-                                        {getFieldValue(item.field_values, "MIDIA")}
-                                    </td>
+                                        <td className="px-6 py-4">
+                                            {getFieldValue(item.field_values, "EXECUTOR DO SERVIÇO")}
+                                        </td>
 
-                                    <td className="px-6 py-4 max-w-xs truncate">
-                                        {getFieldValue(item.field_values, "SERVIÇO EXECUTADO")}
-                                    </td>
+                                        <td className="px-6 py-4">
+                                            {formatDateBR(
+                                                getFieldValue(item.field_values, "DATA E HORA - FIM DE SERVIÇO")
+                                            )}
+                                        </td>
 
-                                    <td className="px-6 py-4 max-w-xs truncate">
-                                        {getFieldValue(item.field_values, "OBSERVAÇÃO")}
-                                    </td>
-                                </tr>
-                            ))}
+                                        <td className="px-6 py-4">
+                                            {getFieldValue(item.field_values, "MIDIA")}
+                                        </td>
+
+                                        <td className="px-6 py-4 max-w-xs truncate">
+                                            {getFieldValue(item.field_values, "SERVIÇO EXECUTADO")}
+                                        </td>
+
+                                        <td className="px-6 py-4 max-w-xs truncate">
+                                            {getFieldValue(item.field_values, "OBSERVAÇÃO")}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
 
