@@ -1,3 +1,4 @@
+import { RefreshTimer } from "@/src/components/RefreshTimer";
 import { getProduttivoFormFillsManutencao } from "@/src/service/produttivo.service";
 
 /*
@@ -130,6 +131,8 @@ export default async function ManutencaoDashboardPage() {
 
     return (
         <main className="p-10 space-y-8">
+            <RefreshTimer interval={3000} />
+
             <h1 className="text-4xl font-extrabold text-center text-gray-800">
                 Dashboard de Manutenções
             </h1>
